@@ -37,7 +37,7 @@ $(function() {
             //==============================
             // CREATE CONVERSATION
             //==============================
-            connectedConversation = connectedSession.getConversation(name);
+            connectedConversation = connectedSession.getOrCreateConversation(name);
 
             //==============================
             // JOIN CONVERSATION

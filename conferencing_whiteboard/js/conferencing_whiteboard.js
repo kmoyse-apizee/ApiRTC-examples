@@ -1,4 +1,3 @@
-
 'use strict';
 var cloudUrl = 'https://cloud.apizee.com';
 var connectedSession = null;
@@ -18,44 +17,51 @@ ua = new apiRTC.UserAgent({
 function showOfflineWhiteboardArea() {
     document.getElementById('offlineWhiteboard').style.display = 'block';
 }
+
 function hideOfflineWhiteboardArea() {
     document.getElementById('offlineWhiteboard').style.display = 'none';
 }
+
 function showOnlineWhiteboardArea() {
     document.getElementById('onlineWhiteboard').style.display = 'block';
 }
+
 function hideOnlineWhiteboardArea() {
     document.getElementById('onlineWhiteboard').style.display = 'none';
 }
+
 function showWhiteboardFctArea() {
     document.getElementById('whiteboardFct').style.display = 'block';
 }
+
 function hideWhiteboardFctArea() {
     document.getElementById('whiteboardFct').style.display = 'none';
 }
-function setSessionListeners(){
-     connectedSession.on("rawData",  function (e) {
-	    console.log('receiveData',e);
-            if(e.content && typeof e.content.event!=="undefined" && e.content.event){
-		switch(e.content.event){
-                    case 'conv_new_background':
-                        if(typeof e.content.value!=="undefined" && e.content.value){
-                            $("#paper").css('background','url('+e.content.value+') no-repeat');
-                        }
-                        break;
-	            default:
-                        console.log("receive event not catch :", e);
-		        break;
-	        }
-	   }
-        });
+
+function setSessionListeners() {
+    connectedSession.on("rawData", function(e) {
+        console.log('receiveData', e);
+        if (e.content && typeof e.content.event !== "undefined" && e.content.event) {
+            switch (e.content.event) {
+                case 'conv_new_background':
+                    if (typeof e.content.value !== "undefined" && e.content.value) {
+                        $("#paper").css('background', 'url(' + e.content.value + ') no-repeat');
+                    }
+                    break;
+                default:
+                    console.log("receive event not catch :", e);
+                    break;
+            }
+        }
+    });
 }
+
 function setConversationListeners() {
 
     console.log("setConversationListeners");
 
     connectedConversation
-        .on("newWhiteboardSession", function () {
+        .on("newWhiteboardSession", function() {
             console.log("newWhiteboardSession in client page");
             connectedConversation.startNewWhiteboardSession('paper');
             whiteBoardClient = ua.getWhiteboardClient();
@@ -63,7 +69,7 @@ function setConversationListeners() {
             whiteBoardClient.setFocusOnDrawing(true);
             showWhiteboardFctArea();
         })
-        .on("whiteboardRoomMemberUpdate", function (e) {
+        .on("whiteboardRoomMemberUpdate", function(e) {
             console.log("whiteboardRoomMemberUpdate roomId :", e.roomId);
             console.log("whiteboardRoomMemberUpdate status :", e.status);
             console.log("whiteboardRoomMemberUpdate status :", e.contacts);
@@ -84,21 +90,21 @@ function joinConference(name) {
 
         // Save session
         connectedSession = session;
-	setSessionListeners();
+        setSessionListeners();
         //==============================
         // 3/ CREATE CONVERSATION
         //==============================
-        connectedConversation = connectedSession.getConversation(name);
+        connectedConversation = connectedSession.getOrCreateConversation(name);
 
         setConversationListeners();
-	
+
         //==============================
         // 6/ JOIN CONVERSATION
         //==============================
         connectedConversation.join()
             .then(function(response) {
                 console.error('Conversation joined');
-            }).catch(function (err) {
+            }).catch(function(err) {
                 console.error('Conversation join error', err);
             });
     });
@@ -164,44 +170,44 @@ $('#clearPaper').on('click', function() {
     console.log('clearPaper');
     whiteBoardClient.deleteHistory();
 });
-$('#drawingTool').change(function(){
+$('#drawingTool').change(function() {
     whiteBoardClient.setDrawingTool($('#drawingTool').val());
 });
-$('#brushSize').change(function(){
+$('#brushSize').change(function() {
     whiteBoardClient.setBrushSize($('#brushSize').val());
 });
-$('#brushColor').change(function(){
+$('#brushColor').change(function() {
     whiteBoardClient.setBrushColor($('#brushColor').val());
 });
-$('#textInputScale').change(function(){
+$('#textInputScale').change(function() {
     whiteBoardClient.setScale($('#textInputScale').val());
 });
-$('#textInputOffsetX').change(function(){
+$('#textInputOffsetX').change(function() {
     whiteBoardClient.setOffset($('#textInputOffsetX').val(), $('#textInputOffsetY').val());
 });
-$('#textInputOffsetY').change(function(){
+$('#textInputOffsetY').change(function() {
     whiteBoardClient.setOffset($('#textInputOffsetX').val(), $('#textInputOffsetY').val());
 });
-$('#textInputButton').click(function(){
+$('#textInputButton').click(function() {
     whiteBoardClient.printSharedText($('#textInputX').val(), $('#textInputY').val(), $('#textInput').val(), 20);
 });
-$('#undo').click(function(){
+$('#undo').click(function() {
     console.log('undo');
     whiteBoardClient.undo();
 });
-$('#redo').click(function(){
+$('#redo').click(function() {
     console.log('redo');
     whiteBoardClient.redo();
 });
-$('#changeBackground').click(function(){
-    if($('#backgroundImage').val()!==""){
-	connectedConversation.sendRawData({
+$('#changeBackground').click(function() {
+    if ($('#backgroundImage').val() !== "") {
+        connectedConversation.sendRawData({
             event: 'conv_new_background',
-            value: $('#backgroundImage').val() ,
+            value: $('#backgroundImage').val(),
         });
-	$("#paper").css('background','url('+$('#backgroundImage').val()+') no-repeat');
+        $("#paper").css('background', 'url(' + $('#backgroundImage').val() + ') no-repeat');
 
-   }else{
-	alert('No background set');
-  }
+    } else {
+        alert('No background set');
+    }
 });

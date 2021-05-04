@@ -21,9 +21,9 @@ $(function() {
         }
     }
 
-    function joinConversation (name) {
+    function joinConversation(name) {
         if (name !== '') {
-            activeConversation = connectedSession.getConversation(name);
+            activeConversation = connectedSession.getOrCreateConversation(name);
 
             //Listen to incoming messages from conversation
             activeConversation.on('message', function(e) {
@@ -31,13 +31,13 @@ $(function() {
             });
             //Listen for any participants entering or leaving the conversation
             activeConversation.on('contactJoined', function(contact) {
-                console.log("Contact that has joined :", contact);
-                renderUserList();
-            })
-            .on('contactLeft', function(contact) {
-                console.log("Contact that has left :", contact);
-                renderUserList();
-            });
+                    console.log("Contact that has joined :", contact);
+                    renderUserList();
+                })
+                .on('contactLeft', function(contact) {
+                    console.log("Contact that has left :", contact);
+                    renderUserList();
+                });
 
             activeConversation.join()
                 .then(function() {
@@ -52,7 +52,7 @@ $(function() {
         }
     }
 
-    function renderUserList () {
+    function renderUserList() {
         var contacts = activeConversation.getContacts();
         $('#active-users').empty();
         $('#active-users').append('<li><b>Active users</b></li>');
@@ -93,7 +93,7 @@ $(function() {
         // Join conversation from its name
         joinConversation(document.getElementById('conversation-name').value);
     });
-    $('#conversation-name').keypress(function (e) {
+    $('#conversation-name').keypress(function(e) {
         if (e.which == 13) {
             // Join conversation from its name
             joinConversation(document.getElementById('conversation-name').value);
@@ -107,7 +107,7 @@ $(function() {
     $('#send-message').on('click', function() {
         sendMessageToActiveConversation($('#typing-area').val().toString());
     });
-    $('#typing-area').keypress(function (e) {
+    $('#typing-area').keypress(function(e) {
         if (e.which == 13) {
             sendMessageToActiveConversation($('#typing-area').val().toString());
             return false;

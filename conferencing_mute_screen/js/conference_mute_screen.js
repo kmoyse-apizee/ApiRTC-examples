@@ -42,7 +42,7 @@ $(function() {
 
             ua.enableMeshRoomMode(true); //Activate Mesh room mode
 
-            connectedConversation = connectedSession.getConversation(name);
+            connectedConversation = connectedSession.getOrCreateConversation(name);
 
             //==========================================================
             // 4/ ADD EVENT LISTENER : WHEN NEW STREAM IS AVAILABLE IN CONVERSATION

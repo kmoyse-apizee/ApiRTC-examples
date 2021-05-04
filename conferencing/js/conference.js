@@ -37,7 +37,7 @@ $(function() {
             //==============================
             // 3/ CREATE CONVERSATION
             //==============================
-            connectedConversation = connectedSession.getConversation(name);
+            connectedConversation = connectedSession.getOrCreateConversation(name);
 
             //==========================================================
             // 4/ ADD EVENT LISTENER : WHEN NEW STREAM IS AVAILABLE IN CONVERSATION

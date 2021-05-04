@@ -143,7 +143,7 @@ function joinConference(name) {
         //==============================
         // CREATE CONVERSATION
         //==============================
-        connectedConversation = connectedSession.getConversation(name);
+        connectedConversation = connectedSession.getOrCreateConversation(name);
 
         //==========================================================
         // ADD EVENT LISTENER : WHEN NEW STREAM IS AVAILABLE IN CONVERSATION

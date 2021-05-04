@@ -1,4 +1,3 @@
-
 'use strict';
 var cloudUrl = 'https://cloud.apizee.com';
 var connectedSession = null;
@@ -13,34 +12,42 @@ function showCallArea() {
     document.getElementById('call').style.display = 'inline-block';
     document.getElementById('title').innerHTML = 'You are currently in a video call';
 }
+
 function hideCallArea() {
     document.getElementById('start-call').style.display = 'inline-block';
     document.getElementById('call').style.display = 'none';
     document.getElementById('title').innerHTML = 'Video call demo';
 }
+
 function showOfflineWhiteboardArea() {
     document.getElementById('offlineWhiteboard').style.display = 'inline-block';
 }
+
 function hideOfflineWhiteboardArea() {
     document.getElementById('offlineWhiteboard').style.display = 'none';
 }
+
 function showOnlineWhiteboardArea() {
     document.getElementById('onlineWhiteboard').style.display = 'inline-block';
 }
+
 function hideOnlineWhiteboardArea() {
     document.getElementById('onlineWhiteboard').style.display = 'none';
 }
+
 function showWhiteboardFctArea() {
     document.getElementById('whiteboardFct').style.display = 'inline-block';
 }
+
 function hideWhiteboardFctArea() {
     document.getElementById('whiteboardFct').style.display = 'none';
 }
+
 function manageInvite(contact) {
     var invitation = contact.inviteTo(connectedConversation);
 
     //when contact answer to invitation
-    invitation.onResponse(function (status) {
+    invitation.onResponse(function(status) {
         if (status === apiRTC.INVITATION_STATUS_ACCEPTED) { //join when other contact accepted invitation
 
             console.warn('Invitation accepted! ');
@@ -57,7 +64,7 @@ function setConversationListeners() {
     console.log("setConversationListeners");
 
     connectedConversation
-        .on("newWhiteboardSession", function () {
+        .on("newWhiteboardSession", function() {
             console.log("newWhiteboardSession in client page");
             connectedConversation.startNewWhiteboardSession('paper');
             whiteBoardClient = ua.getWhiteboardClient();
@@ -68,7 +75,7 @@ function setConversationListeners() {
             whiteBoardClient.setFocusOnDrawing(true);
             showWhiteboardFctArea();
         })
-        .on("whiteboardRoomMemberUpdate", function (e) {
+        .on("whiteboardRoomMemberUpdate", function(e) {
             console.log("whiteboardRoomMemberUpdate roomId :", e.roomId);
             console.log("whiteboardRoomMemberUpdate status :", e.status);
             console.log("whiteboardRoomMemberUpdate status :", e.contacts);
@@ -80,12 +87,12 @@ function inviteContact(userId) {
 
     if (contact !== null) {
         if (connectedConversation === null) {
-            connectedConversation = connectedSession.getConversation((Date.now() + '-' + userId));
+            connectedConversation = connectedSession.getOrCreateConversation((Date.now() + '-' + userId));
         }
-        if (connectedConversation.isJoined() ){
+        if (connectedConversation.isJoined()) {
             manageInvite(contact);
         } else {
-            connectedConversation.join({session: connectedSession}).then(function () {
+            connectedConversation.join({ session: connectedSession }).then(function() {
                 console.warn('Conversation joigned');
                 manageInvite(contact);
             });
@@ -116,7 +123,7 @@ function renderUserList() {
                 inputEl.setAttribute('user-id', user.getId());
                 inputEl.setAttribute('type', 'button');
                 inputEl.setAttribute('value', 'Invite to conversation');
-                inputEl.setAttribute('onclick', 'inviteContact(' + user.getId() + ')' );
+                inputEl.setAttribute('onclick', 'inviteContact(' + user.getId() + ')');
                 liEl.appendChild(inputEl);
                 userListEl.appendChild(liEl);
             }
@@ -139,11 +146,11 @@ function register() {
         connectedSession = session;
 
         connectedSession
-            .on("contactListUpdate", function (updatedContacts) { //display a list of connected users
+            .on("contactListUpdate", function(updatedContacts) { //display a list of connected users
                 console.log("MAIN - contactListUpdate", updatedContacts);
                 renderUserList();
             })
-            .on("conversationInvitation", function (invitation) { //When client receives an invitation from another user
+            .on("conversationInvitation", function(invitation) { //When client receives an invitation from another user
                 console.warn("Invitation received from " + invitation.sender.getId());
 
                 $("#invitationSender").text(invitation.sender.getUsername());
@@ -153,7 +160,7 @@ function register() {
                     width: 400,
                     modal: true,
                     buttons: {
-                        Accept: function () {
+                        Accept: function() {
 
                             connectedConversation = invitation.getConversation();
                             setConversationListeners();
@@ -167,7 +174,7 @@ function register() {
                                 });
                             $(this).dialog("close");
                         },
-                        Decline: function () {
+                        Decline: function() {
                             invitation.decline();
                             $(this).dialog("close");
                         }
@@ -286,32 +293,32 @@ $('#clearPaper').on('click', function() {
     console.log('clearPaper');
     whiteBoardClient.deleteHistory();
 });
-$('#drawingTool').change(function(){
+$('#drawingTool').change(function() {
     whiteBoardClient.setDrawingTool($('#drawingTool').val());
 });
-$('#brushSize').change(function(){
+$('#brushSize').change(function() {
     whiteBoardClient.setBrushSize($('#brushSize').val());
 });
-$('#brushColor').change(function(){
+$('#brushColor').change(function() {
     whiteBoardClient.setBrushColor($('#brushColor').val());
 });
-$('#textInputScale').change(function(){
+$('#textInputScale').change(function() {
     whiteBoardClient.setScale($('#textInputScale').val());
 });
-$('#textInputOffsetX').change(function(){
+$('#textInputOffsetX').change(function() {
     whiteBoardClient.setOffset($('#textInputOffsetX').val(), $('#textInputOffsetY').val());
 });
-$('#textInputOffsetY').change(function(){
+$('#textInputOffsetY').change(function() {
     whiteBoardClient.setOffset($('#textInputOffsetX').val(), $('#textInputOffsetY').val());
 });
-$('#textInputButton').click(function(){
+$('#textInputButton').click(function() {
     whiteBoardClient.printSharedText($('#textInputX').val(), $('#textInputY').val(), $('#textInput').val(), 20);
 });
-$('#undo').click(function(){
+$('#undo').click(function() {
     console.log('undo');
     whiteBoardClient.undo();
 });
-$('#redo').click(function(){
+$('#redo').click(function() {
     console.log('redo');
     whiteBoardClient.redo();
 });
