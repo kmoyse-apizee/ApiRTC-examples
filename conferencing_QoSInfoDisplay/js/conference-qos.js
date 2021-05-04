@@ -29,7 +29,7 @@ $(function() {
             connectedSession = session;
 
             //Call Stats monitoring is supported on Chrome and Firefox and will be added soon on Safari
-            if ((apiCC.browser === 'Chrome') || (apiCC.browser === 'Firefox')) {
+            if ((apiRTC.browser === 'Chrome') || (apiRTC.browser === 'Firefox')) {
                 ua.enableCallStatsMonitoring(true, { interval: 1000 });
                 ua.enableActiveSpeakerDetecting(true, { threshold: 50 });
             }
@@ -363,7 +363,7 @@ $(function() {
         // Remove old stats
         var rQosInfo = document.getElementById("remote-qosInfo-" + callId);
 
-        if (rQosInfo === null ||  rQosInfo === undefined) {
+        if (rQosInfo === null || rQosInfo === undefined) {
             console.warn("remote-qosInfo element is not present for callId : ", callId);
             return;
         }
